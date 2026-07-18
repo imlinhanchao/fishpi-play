@@ -21,7 +21,7 @@ jobs:
         npm ci
         npm run build
         cd dist
-        npm ci --prod
+        npm i --omit=dev
         cd ..
 
     - name: Deploy to Server
