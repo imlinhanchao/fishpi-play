@@ -38,11 +38,15 @@ jobs:
     
     - name: Execute remote deployment script
       uses: appleboy/ssh-action@v0.1.10
+      env:
+        MONGO_URL: ${{ secrets.MONGO_URL }}
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT || 22 }}
+        envs: MONGO_URL,JWT_SECRET
         script: |
           #!/bin/bash
           set -e  # 失败时退出
@@ -65,11 +69,11 @@ jobs:
           
           # 检查服务是否存在
           if pm2 show $SERVICE_NAME &> /dev/null; then
-              echo "🔄 服务 $SERVICE_NAME 正在重启..."
-              pm2 restart $SERVICE_NAME
+              echo "🔄 服务 $SERVICE_NAME 正在重启并更新环境变量..."
+              MONGO_URL=$MONGO_URL JWT_SECRET=$JWT_SECRET pm2 restart $SERVICE_NAME --update-env
           else
               echo "🆕 服务 $SERVICE_NAME 不存在，正在创建..."
-              pm2 start -n $SERVICE_NAME node -- index.js
+              MONGO_URL=$MONGO_URL JWT_SECRET=$JWT_SECRET pm2 start -n $SERVICE_NAME node -- index.js
           fi
           
           # 保存 PM2 进程列表
