@@ -3,3 +3,4 @@ dist
 config.json
 *.sh
 cache
+.env
