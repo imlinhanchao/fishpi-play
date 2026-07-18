@@ -1,0 +1,49 @@
+:root {
+  /* Element Plus Theme Color: Orange */
+  --el-color-primary: #f39c12;
+  --el-color-primary-light-3: #f6b341;
+  --el-color-primary-light-5: #f9ca74;
+  --el-color-primary-light-7: #fcdfa8;
+  --el-color-primary-light-8: #fde9c5;
+  --el-color-primary-light-9: #fef412c01; /* Dark theme contrast */
+  --el-color-primary-dark-2: #c27d0e;
+
+  /* Additional Dark Theme Adjustments if needed */
+  --el-bg-color: #121212;
+  --el-bg-color-overlay: #1a1a1a;
+  --el-border-color-light: #2c2c2c;
+  --el-border-color-extra-light: #242424;
+}
+
+html.dark {
+  --el-color-primary: #f39c12;
+  --el-color-primary-light-3: #f6b341;
+  --el-color-primary-light-5: #f9ca74;
+  --el-color-primary-light-7: #fcdfa8;
+  --el-color-primary-light-8: #fde9c5;
+  --el-color-primary-light-9: #412c01;
+  --el-color-primary-dark-2: #c27d0e;
+
+  /* Custom overrides for active menu items and common elements */
+  --el-menu-bg-color: transparent;
+  --el-menu-text-color: #bdc3c7;
+  --el-menu-active-color: #f39c12;
+  --el-menu-hover-bg-color: rgba(243, 156, 18, 0.1);
+}
+
+/* Global scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
+}
+

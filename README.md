@@ -1,0 +1,87 @@
+# 鱼丸游戏平台 (Fish Ball Game Platform)
+
+鱼丸是一个专为纯前端、单机游戏打造的全方位集成平台。它旨在通过简单的 SDK 接入，为传统单机游戏提供后端能力，包括用户认证、云端存档、数据同步以及管理后台。
+
+## 核心特性
+
+- **🚀 快速接入**：通过 `fish-ball-sdk` 几行代码即可完成用户登录与数据持久化。
+- **🛡️ 安全认证**：深度集成[摸鱼派](https://fishpi.cn)开放平台，提供安全可靠的身份验证。
+- **☁️ 云端存档**：自动处理游戏存档的上传与下载，支持多设备无缝连接。
+- **📊 游戏管理后台**：
+  - **开发者端**：注册新游戏、管理域名白名单、配置回调路径、查看玩家数据。
+  - **超级管理端**：审批游戏申请、下架违规游戏、全局资源监控。
+- **🌑 现代 UI**：基于 Vue 3 + Element Plus 的暗黑模式后台管理界面。
+
+## 项目结构
+
+项目采用 Monorepo 架构进行管理：
+
+```text
+/
+├── apps/
+│   ├── admin/      # 管理后台前端 (Vue 3, Element Plus, Vite, Pinia)
+│   └── server/     # 后端服务 (Express, TypeORM, MongoDB, TypeScript)
+├── packages/
+│   └── sdk/        # 游戏接入 SDK (Type-safe HTTP client)
+└── package.json    # 根目录工作区配置
+```
+
+## 技术栈
+
+- **Frontend**: Vue 3, Vite, Element Plus, Pinia, Vue Router, Iconify
+- **Backend**: Node.js, Express, TypeORM (MongoDB Driver), TypeScript
+- **Database**: MongoDB
+- **Package Manager**: NPM (Workspaces)
+
+## 快速开始
+
+### 环境依赖
+
+- Node.js (建议 v18+)
+- MongoDB
+
+### 安装与运行
+
+1. **安装依赖**
+   ```bash
+   npm install
+   ```
+
+2. **配置后端**
+   在 `apps/server/src/config.ts` 或环境变量中配置 MongoDB 连接信息。
+
+3. **启动开发环境**
+
+   **启动后端服务：**
+   ```bash
+   npm run dev --prefix apps/server
+   ```
+
+   **启动管理后台：**
+   ```bash
+   npm run dev --prefix apps/admin
+   ```
+
+## 开发者指南
+
+### 游戏注册流程
+1. 进入“游戏注册”页面填写游戏名称、Key 及相关配置。
+2. 提交申请后，状态默认为 `pending`。
+3. 超级管理员在“超级管理”页面进行 `approved` 操作后，游戏正式上线并可使用 SDK。
+
+### SDK 接入示例
+```typescript
+import { GameSDK } from 'fish-ball-sdk';
+
+const sdk = new GameSDK('YOUR_GAME_KEY', 'CALLBACK_URL');
+
+// 登录
+await sdk.login();
+
+// 获取存档
+const archive = await sdk.getArchive();
+```
+
+## 许可证
+
+MIT License

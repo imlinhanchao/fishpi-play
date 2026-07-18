@@ -1,0 +1,47 @@
+{
+  "name": "fishpi-play",
+  "version": "0.0.2",
+  "description": "A SDK for fishpi play game platform.",
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.mts",
+  "files": [
+    "dist/*",
+    "README.md"
+  ],
+  "keywords": [
+    "fishpi",
+    "play",
+    "game",
+    "sdk"
+  ],
+  "bugs": {
+    "url": "https://github.com/imlinhanchao/fishpi-play/issues"
+  },
+  "homepage": "https://github.com/imlinhanchao/fishpi-play#readme",
+  "author": {
+    "name": "Hancel.Lin",
+    "email": "imlinhanchao@foxmail.com",
+    "url": "https://github.com/imlinhanchao"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=12.0"
+  },
+  "scripts": {
+    "build": "tsdown src/index.ts",
+    "dev": "tsdown src/index.ts --watch"
+  },
+  "dependencies": {
+    "reconnecting-websocket": "^4.4.0"
+  },
+  "devDependencies": {
+    "tsdown": "^0.18.4",
+    "typescript": "^5.1.6"
+  },
+  "release": {
+    "branches": [
+      "master"
+    ]
+  }
+}

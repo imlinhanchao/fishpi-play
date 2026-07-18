@@ -1,0 +1,19 @@
+{
+  "name": "game-platform-root",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build:server && npm run build:admin && cp package*.json dist/",
+    "build:admin": "cd apps/admin && npm run build",
+    "build:server": "cd apps/server && npm run build"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
