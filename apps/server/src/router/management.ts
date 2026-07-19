@@ -3,6 +3,7 @@ import { AppDataSource } from "../data-source";
 import { GameUser } from "../entities/GameUser";
 import { Archive } from "../entities/Archive";
 import { Game } from "../entities/Game";
+import { User } from "../entities/User";
 import { clients } from "../index";
 import { authenticate } from "../middleware/auth";
 
@@ -32,9 +33,12 @@ router.use("/:gameKey", async (req: any, res, next) => {
 router.get("/:gameKey/users", async (req: any, res) => {
     const { gameKey } = req.params;
     const gameUserRepo = AppDataSource.getMongoRepository(GameUser);
+    const userRepo = AppDataSource.getMongoRepository(User);
     const archiveRepo = AppDataSource.getMongoRepository(Archive);
 
     const users = await gameUserRepo.find({ where: { gameKey } });
+    const userIds = users.map(u => u.userId);
+    const userDetails = await userRepo.findBy({ userId: { $in: userIds } });
     
     // 聚合在线状态和存档信息
     const results = await Promise.all(users.map(async (user) => {
@@ -52,6 +56,7 @@ router.get("/:gameKey/users", async (req: any, res) => {
 
         return {
             userId: user.userId,
+            ...userDetails.find(u => u.userId === user.userId),
             attributes: user.attributes,
             lastLoginAt: user.lastLoginAt,
             isOnline: onlineDevices.length > 0,
