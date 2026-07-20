@@ -12,6 +12,11 @@ export default defineConfig({
     }),
   ],
   base: './',
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src'),
+    },
+  },
   build: {
     target: 'es2015',
     outDir: '../../dist/public',
