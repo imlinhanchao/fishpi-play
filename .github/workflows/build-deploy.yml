@@ -62,6 +62,10 @@ jobs:
 
           # 在程序目录启动
           cd ${{ secrets.DEPLOY_PATH }}
+
+          if [ -f ".env" ]; then
+            source .env
+          fi
           
           # 检查服务是否存在
           if pm2 show $SERVICE_NAME &> /dev/null; then
