@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { GameSDK } from 'fishpi-play'
 import { useUserStore } from '../store/user'
+import axios from 'axios'
 
 const sdk = new GameSDK('', '')
 
@@ -9,6 +10,11 @@ export const routes = [
       path: '/',
       meta: { hidden: true },
       redirect: '/register'
+  },
+  {
+    path: '/config',
+    meta: { hidden: true },
+    component: () => import('../views/Config.vue')
   },
   {
     path: '/login',
@@ -43,7 +49,25 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  if (to.path === '/login') {
+  // Check if system is configured
+  try {
+    const { data: res } = await axios.get('/api/status');
+    const isConfigured = res.code === 0 ? res.data.configured : res.configured;
+    if (isConfigured == false && to.path !== '/config') {
+      return next('/config');
+    }
+    if (isConfigured !== false && to.path === '/config') {
+      return next('/');
+    }
+  } catch (e) {
+    console.error('Failed to check status', e);
+    // 避免服务未启动时，可以访问 /config 页面
+    if (to.path === '/config') {
+      return next('/');
+    }
+  }
+
+  if (to.path === '/config' || to.path === '/login') {
     return next()
   }
 

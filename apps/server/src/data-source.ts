@@ -5,10 +5,11 @@ import { User } from "./entities/User";
 import { Archive } from "./entities/Archive";
 import { Config } from "./entities/Config";
 import { GameUser } from "./entities/GameUser";
+import { MONGO_URL } from "./config";
 
 export const AppDataSource = new DataSource({
     type: "mongodb",
-    url: process.env.MONGO_URL || "mongodb://localhost:27017/game-platform",
+    url: MONGO_URL,
     synchronize: true,
     logging: false,
     entities: [Game, User, Archive, Config, GameUser],
