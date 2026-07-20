@@ -1,7 +1,7 @@
 <template>
   <div class="header-container">
     <div class="logo">
-      <icon-iconify icon="mdi:gamepad-variant" class="logo-icon" />
+      <Icon icon="svg-icon:logo" class="logo-icon" />
       <span class="logo-text">鱼丸游戏平台</span>
     </div>
 
@@ -13,14 +13,14 @@
       <el-dropdown>
         <div class="avatar-wrapper">
           <el-avatar :size="32" :src="userInfo?.avatar || ''">
-            <icon-iconify icon="mdi:account" />
+            <Icon icon="mdi:account" />
           </el-avatar>
           <span class="username">{{ userInfo?.nickname || userInfo?.username }}</span>
         </div>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="handleLogout">
-              <icon-iconify icon="mdi:logout" class="mr-1" />
+              <Icon icon="mdi:logout" class="mr-1" />
               退出登录
             </el-dropdown-item>
           </el-dropdown-menu>
@@ -32,10 +32,9 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { Icon as IconIconify } from '@iconify/vue';
 import Menu from './Menu.vue';
 import { GameSDK } from 'fishpi-play';
-import { useUserStore } from '../store/user';
+import { useUserStore } from '../store/user.js';
 import { storeToRefs } from 'pinia';
 
 const sdk = new GameSDK('', '');

@@ -4,7 +4,7 @@
       <template #header>
         <div class="card-header">
           <div class="header-title">
-            <icon-iconify icon="mdi:controller-classic" class="mr-1" />
+            <Icon icon="mdi:controller-classic" class="mr-1" />
             <span>游戏管理中心</span>
           </div>
           <el-select
@@ -46,7 +46,7 @@
         </el-descriptions>
         <div class="mt-4 text-right">
           <el-button type="primary" @click="saveConfig">
-            <icon-iconify icon="mdi:content-save-outline" class="mr-1" />
+            <Icon icon="mdi:content-save-outline" class="mr-1" />
             保存配置
           </el-button>
         </div>
@@ -59,7 +59,7 @@
         <div class="card-header">
           <span>玩家数据与在线状态</span>
           <el-button link @click="fetchGameData">
-            <icon-iconify icon="mdi:refresh" class="mr-1" />
+            <Icon icon="mdi:refresh" class="mr-1" />
             刷新
           </el-button>
         </div>
@@ -110,7 +110,7 @@
         <el-table-column label="操作" width="150" fixed="right" align="center">
           <template #default="{ row }">
             <el-button link type="primary" @click="viewArchive(row.userId)">
-              <icon-iconify icon="mdi:database-search-outline" class="mr-1" />
+              <Icon icon="mdi:database-search-outline" class="mr-1" />
               查看存档
             </el-button>
           </template>
@@ -134,7 +134,7 @@
             >
           </div>
           <el-button size="small" type="primary" link @click="copyArchive">
-            <icon-iconify icon="mdi:content-copy" class="mr-1" />
+            <Icon icon="mdi:content-copy" class="mr-1" />
             复制内容
           </el-button>
         </div>
@@ -156,7 +156,6 @@ import {
   getGameUserArchive,
 } from "../api/game";
 import { ElMessage } from "element-plus";
-import { Icon as IconIconify } from "@iconify/vue";
 
 const games = ref<any[]>([]);
 const selectedGameKey = ref("");

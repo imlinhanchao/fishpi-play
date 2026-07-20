@@ -10,7 +10,7 @@
         v-if="!item.meta?.hidden && (!item.meta?.requiresAdmin || userInfo?.isAdmin)" 
         :index="item.path"
       >
-        <icon-iconify v-if="item.meta?.icon" :icon="item.meta.icon" class="mr-1" />
+        <Icon v-if="item.meta?.icon" :icon="item.meta.icon" class="mr-1" />
         {{ item.meta?.title || item.path }}
       </el-menu-item>
     </template>
@@ -20,7 +20,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { Icon as IconIconify } from '@iconify/vue';
 import { useUserStore } from '../store/user';
 import { storeToRefs } from 'pinia';
 import { routes } from '../router';

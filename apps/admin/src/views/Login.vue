@@ -3,7 +3,7 @@
     <div class="login-wrapper">
       <div class="info-section">
         <div class="logo">
-          <icon-iconify icon="mdi:gamepad-variant" class="logo-icon" />
+          <Icon icon="svg-icon:logo" class="logo-icon" />
           <span>鱼丸游戏平台</span>
         </div>
         <h1>构建你的游戏梦想</h1>
@@ -13,15 +13,15 @@
         </p>
         <div class="features">
           <div class="feature-item">
-            <icon-iconify icon="mdi:shield-check-outline" />
+            <Icon icon="mdi:shield-check-outline" />
             <span>安全可靠的身份验证</span>
           </div>
           <div class="feature-item">
-            <icon-iconify icon="mdi:cloud-sync-outline" />
+            <Icon icon="mdi:cloud-sync-outline" />
             <span>实时云端数据同步</span>
           </div>
           <div class="feature-item">
-            <icon-iconify icon="mdi:devices" />
+            <Icon icon="mdi:devices" />
             <span>跨平台多端连接</span>
           </div>
         </div>
@@ -37,11 +37,11 @@
           
           <div class="login-content">
             <div class="login-graphic">
-              <icon-iconify icon="mdi:account-circle-outline" class="user-icon" />
+              <Icon icon="mdi:account-circle-outline" class="user-icon" />
             </div>
             
             <p v-if="loading" class="status-msg">
-              <icon-iconify icon="mdi:loading" class="spin" />
+              <Icon icon="mdi:loading" class="spin" />
               正在检查登录状态...
             </p>
             
@@ -49,7 +49,7 @@
               <p class="welcome-text">欢迎回来，请使用摸鱼派账号登录以继续管理您的游戏项目。</p>
               <div class="btn-center">
                 <el-button color="#f39c12" @click="handleLogin" size="large" class="login-btn">
-                  <icon-iconify icon="mdi:login" class="mr-1" />
+                  <Icon icon="mdi:login" class="mr-1" />
                   通过摸鱼派登录
                 </el-button>
               </div>
@@ -68,7 +68,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { GameSDK } from 'fishpi-play';
-import { Icon as IconIconify } from '@iconify/vue';
 
 const sdk = new GameSDK('', '');
 const loading = ref(true);

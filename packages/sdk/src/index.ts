@@ -16,7 +16,7 @@ export class GameSDK {
     private ws: ReconnectingWebSocket | null = null;
     private userAttributes: Record<string, any> = {};
 
-    constructor(gameKey: string, baseUrl: string = 'http://localhost:3000') {
+    constructor(gameKey: string, baseUrl: string = 'http://play.adventext.fun') {
         this.gameKey = gameKey;
         this.baseUrl = baseUrl;
         this.token = localStorage.getItem(this.tokenKey);

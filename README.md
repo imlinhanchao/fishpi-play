@@ -1,18 +1,22 @@
-# 鱼丸游戏平台 (Fishpi Play)
+<p align="center">
+  <img src="apps/admin/public/icon.svg" width="128" height="128" alt="Elemental Earth Logo">
+</p>
 
-鱼丸是一个专为纯前端、单机游戏打造的全方位集成平台。它旨在通过简单的 SDK 接入，为传统单机游戏提供后端能力，包括用户认证、云端存档、数据同步以及管理后台。
+<h1 align="center">🎮 鱼丸游戏平台</h1>
 
-## 核心特性
+一个专为纯前端、单机游戏打造的全方位集成平台。它旨在通过简单的 SDK 接入，为传统单机游戏提供后端能力，包括用户认证、云端存档、数据同步以及管理后台。
+
+## ✨ 核心特性
 
 - **🚀 快速接入**：通过 `fish-ball-sdk` 几行代码即可完成用户登录与数据持久化。
 - **🛡️ 安全认证**：深度集成[摸鱼派](https://fishpi.cn)开放平台，提供安全可靠的身份验证。
-- **☁️ 云端存档**：自动处理游戏存档的上传与下载，支持多设备无缝连接。
+- **☁️ 云端存档**：支持游戏存档的上传与下载，支持多设备无缝连接。
 - **📊 游戏管理后台**：
   - **开发者端**：注册新游戏、管理域名白名单、配置回调路径、查看玩家数据。
   - **超级管理端**：审批游戏申请、下架违规游戏、全局资源监控。
 - **🌑 现代 UI**：基于 Vue 3 + Element Plus 的暗黑模式后台管理界面。
 
-## 项目结构
+## 📁 项目结构
 
 项目采用 Monorepo 架构进行管理：
 
@@ -26,14 +30,14 @@
 └── package.json    # 根目录工作区配置
 ```
 
-## 技术栈
+## 🛠 技术栈
 
 - **Frontend**: Vue 3, Vite, Element Plus, Pinia, Vue Router, Iconify
 - **Backend**: Node.js, Express, TypeORM (MongoDB Driver), TypeScript
 - **Database**: MongoDB
 - **Package Manager**: NPM (Workspaces)
 
-## 快速开始
+## 🖥️ 快速开始
 
 ### 环境依赖
 
@@ -62,26 +66,27 @@
    npm run dev --prefix apps/admin
    ```
 
-## 开发者指南
+## 🗺️ 开发者指南
 
 ### 游戏注册流程
 1. 进入“游戏注册”页面填写游戏名称、Key 及相关配置。
-2. 提交申请后，状态默认为 `pending`。
-3. 超级管理员在“超级管理”页面进行 `approved` 操作后，游戏正式上线并可使用 SDK。
+2. 提交申请后，状态默认为 `待审批`。
+3. 超级管理员在“超级管理”页面进行 `通过` 操作后，游戏正式上线并可使用 SDK。
 
 ### SDK 接入示例
 ```typescript
 import { GameSDK } from 'fish-ball-sdk';
 
-const sdk = new GameSDK('YOUR_GAME_KEY', 'CALLBACK_URL');
+const sdk = new GameSDK('YOUR_GAME_KEY');
 
 // 登录
 await sdk.login();
 
 // 获取存档
 const archive = await sdk.getArchive();
+
+// 上传存档
+await sdk.saveArchive(archiveData);
 ```
 
-## 许可证
-
-MIT License
+SDK 更多使用方法请参考 [SDK 文档](packages/sdk/README.md)。
