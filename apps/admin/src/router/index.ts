@@ -21,6 +21,11 @@ export const routes = [
     component: () => import('../views/GameRegister.vue')
   },
   {
+    path: '/guide',
+    meta: { icon: 'mdi:help-circle-outline', title: '接入指南' },
+    component: () => import('../views/Guide.vue')
+  },
+  {
     path: '/admin',
     meta: { icon: 'mdi:controller-classic-outline', title: '游戏管理' },
     component: () => import('../views/GameAdmin.vue')
