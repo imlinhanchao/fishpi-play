@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { getUserProfile, type UserProfile } from '../api/user';
+import router from '@/router';
 
 export const useUserStore = defineStore('user', () => {
     const userInfo = ref<UserProfile | null>(null);
@@ -23,7 +24,7 @@ export const useUserStore = defineStore('user', () => {
         userInfo.value = null;
         isLoggedIn.value = false;
         localStorage.clear();
-        window.location.href = '/login';
+        router.push('/login');
     };
 
     return {
