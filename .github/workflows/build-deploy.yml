@@ -66,10 +66,10 @@ jobs:
           # 检查服务是否存在
           if pm2 show $SERVICE_NAME &> /dev/null; then
               echo "🔄 服务 $SERVICE_NAME 正在重启并更新环境变量..."
-              MONGO_URL=$MONGO_URL JWT_SECRET=$JWT_SECRET pm2 restart $SERVICE_NAME --update-env
+              pm2 restart $SERVICE_NAME --update-env
           else
               echo "🆕 服务 $SERVICE_NAME 不存在，正在创建..."
-              MONGO_URL=$MONGO_URL JWT_SECRET=$JWT_SECRET pm2 start -n $SERVICE_NAME node -- index.js
+              pm2 start -n $SERVICE_NAME node -- index.js
           fi
           
           # 保存 PM2 进程列表
