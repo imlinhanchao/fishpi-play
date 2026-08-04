@@ -2,9 +2,9 @@
   <img src="apps/admin/public/icon.svg" width="128" height="128" alt="Elemental Earth Logo">
 </p>
 
-<h1 align="center">🎮 鱼丸游戏平台</h1>
+<h1 align="center">鱼丸游戏平台</h1>
 
-一个专为纯前端、单机游戏打造的全方位集成平台。它旨在通过简单的 SDK 接入，为传统单机游戏提供后端能力，包括用户认证、云端存档、数据同步以及管理后台。
+一个专为纯前端单机游戏打造的全方位集成平台。它旨在通过简单的 SDK 接入，为传统单机游戏提供后端能力，包括用户认证、云端存档、数据同步以及管理后台。
 
 ## ✨ 核心特性
 
@@ -14,7 +14,6 @@
 - **📊 游戏管理后台**：
   - **开发者端**：注册新游戏、管理域名白名单、配置回调路径、查看玩家数据。
   - **超级管理端**：审批游戏申请、下架违规游戏、全局资源监控。
-- **🌑 现代 UI**：基于 Vue 3 + Element Plus 的暗黑模式后台管理界面。
 
 ## 📁 项目结构
 
@@ -75,7 +74,7 @@
 
 ### SDK 接入示例
 ```typescript
-import { GameSDK } from 'fish-ball-sdk';
+import { GameSDK } from 'fishpi-play';
 
 const sdk = new GameSDK('YOUR_GAME_KEY');
 

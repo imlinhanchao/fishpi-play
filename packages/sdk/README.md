@@ -15,7 +15,7 @@ npm install fishpi-play
 ```typescript
 import { GameSDK } from 'fishpi-play';
 
-const sdk = new GameSDK('your_game_key', 'https://play.adventext.fun');
+const sdk = new GameSDK('your_game_key');
 ```
 
 ### 身份认证
