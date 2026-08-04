@@ -9,7 +9,7 @@ export const routes = [
   {
       path: '/',
       meta: { hidden: true },
-      redirect: '/register'
+      redirect: '/guide'
   },
   {
     path: '/config',
@@ -22,14 +22,14 @@ export const routes = [
     component: () => import('../views/Login.vue')
   },
   {
-    path: '/register',
-    meta: { icon: 'mdi:plus-circle-outline', title: '游戏注册' },
-    component: () => import('../views/GameRegister.vue')
-  },
-  {
     path: '/guide',
     meta: { icon: 'mdi:help-circle-outline', title: '接入指南' },
     component: () => import('../views/Guide.vue')
+  },
+  {
+    path: '/register',
+    meta: { icon: 'mdi:plus-circle-outline', title: '游戏注册' },
+    component: () => import('../views/GameRegister.vue')
   },
   {
     path: '/admin',
