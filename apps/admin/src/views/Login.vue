@@ -115,7 +115,7 @@ onMounted(async () => {
 .info-section {
   flex: 1;
   padding: 60px;
-  background-color: #f39c12;
+  background-color: #222;
   color: white;
   display: flex;
   flex-direction: column;
