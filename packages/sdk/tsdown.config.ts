@@ -6,7 +6,11 @@ export default defineConfig([
     outDir: './dist/',
     format: ['esm'],
     platform: 'browser',
-    dts: true,
+    dts: {
+      compilerOptions: {
+        removeComments: false,
+      },
+    },
     target: 'esnext',
     minify: true,
     sourcemap: false,

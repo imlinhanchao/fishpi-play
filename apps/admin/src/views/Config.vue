@@ -28,6 +28,14 @@
         <el-form-item label="JWT Secret">
           <el-input v-model="form.jwtSecret" placeholder="用于签发 Token 的密钥" />
         </el-form-item>
+
+        <el-divider content-position="left">通知配置</el-divider>
+        <el-form-item label="通知金钥">
+          <el-input v-model="form.noticeGoldenKey" placeholder="用于发送通知的金钥" />
+        </el-form-item>
+        <el-form-item label="通知用户">
+          <el-input v-model="form.noticeUsers" placeholder="接收通知的用户名，多个用户名用逗号分隔" />
+        </el-form-item>
         
         <div class="submit-btn" style="text-align: center; margin-top: 20px;">
           <el-button type="primary" @click="handleSubmit" :loading="submitting" size="large">
@@ -46,6 +54,7 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
+import { el } from 'element-plus/es/locale';
 
 const form = ref({
   mongodb: {
@@ -55,7 +64,9 @@ const form = ref({
     user: '',
     password: ''
   },
-  jwtSecret: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+  jwtSecret: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
+  noticeGoldenKey: '',
+  noticeUsers: ''
 });
 
 const submitting = ref(false);

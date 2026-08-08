@@ -72,10 +72,7 @@ const attrs = sdk.getAttributes();
 ### `GameSDK`
 
 #### `constructor(gameKey: string, baseUrl?: string)`
-初始化 SDK 实例。`baseUrl` 默认为 `http://localhost:3000`。
-
-#### `validateDomain(): Promise<boolean>`
-校验当前域名是否在游戏的许可白名单内。
+初始化 SDK 实例。`baseUrl` 默认为 `http://play.adventext.fun`。
 
 #### `login(redirectUri?: string): Promise<void>`
 跳转至平台登录页面。

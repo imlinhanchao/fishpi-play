@@ -2,6 +2,8 @@ import { Router } from "express";
 import { AppDataSource } from "../data-source";
 import { Game } from "../entities/Game";
 import { authenticate } from "../middleware/auth";
+import { FingerTo } from "fishpi";
+import { getConfig } from "../config";
 
 const router = Router();
 router.use(authenticate);
@@ -27,6 +29,16 @@ router.post("/register", async (req: any, res) => {
         updatedAt: new Date()
     });
     await gameRepo.save(game);
+    const config = getConfig();
+    if (config) {
+        const noticeFinger = FingerTo(config.noticeGoldenKey);
+        config.noticeUsers.split(',').forEach(username => {
+            noticeFinger.sendNotice(
+              username.trim(), 
+              `用户${req.user.username}发布了新的游戏《${game.name}》[待审核](https://play.adventext.fun/#/super-admin)`
+            );
+        });
+    }
     res.json(game);
 });
 

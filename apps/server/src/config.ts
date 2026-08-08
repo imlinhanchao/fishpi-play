@@ -12,6 +12,8 @@ export interface AppConfig {
         database: string;
     };
     jwtSecret: string;
+    noticeGoldenKey: string;
+    noticeUsers: string;
 }
 
 let config: AppConfig | null = null;
