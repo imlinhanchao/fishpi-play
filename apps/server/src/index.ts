@@ -4,10 +4,8 @@ dotenv.config();
 import express from "express";
 import "express-async-errors";
 import cors from "cors";
-import jwt from "jsonwebtoken";
 import { WebSocketServer, WebSocket } from "ws";
-import { GameUser } from "./entities/GameUser";
-import { JWT_SECRET, IS_CONFIGURED, saveConfig } from "./config";
+import { IS_CONFIGURED, saveConfig } from "./config";
 import router from "./router/index";
 import { responseHandler, errorHandler } from "./middleware/response";
 import path from 'path';
@@ -59,104 +57,16 @@ server.on('listening', () => {
 
 const wss = new WebSocketServer({ server });
 
-export interface ClientInfo {
-    ws: WebSocket;
-    userId: string;
-    gameKey: string;
-    attributes: any;
-}
-
-export const clients: Map<string, ClientInfo> = new Map();
-
+export { ClientInfo } from './ws';
+export { clients } from './ws';
 
 if (IS_CONFIGURED) {
     import('./data-source').then(({ AppDataSource }) => AppDataSource.initialize()
         .then(() => {
             console.log("Data Source has been initialized!");
 
-            wss.on("connection", (ws, req) => {
-                if (!IS_CONFIGURED) {
-                    ws.close(1008, "Not Configured");
-                    return;
-                }
-                const url = new URL(req.url!, `http://${req.headers.host}`);
-                const token = url.searchParams.get("token");
-
-                if (!token) {
-                    ws.close(1008, "Token Required");
-                    return;
-                }
-
-                try {
-                    const decoded = jwt.verify(token, JWT_SECRET) as any;
-                    const userId = decoded.userId;
-                    const gameKey = decoded.gameKey;
-                    const clientId = `${userId}_${Math.random().toString(36).substring(7)}`;
-
-                    const clientInfo: ClientInfo = {
-                        ws,
-                        userId,
-                        gameKey,
-                        attributes: {}
-                    };
-                    clients.set(clientId, clientInfo);
-
-                    // 记录登录并同步属性
-                    const gameUserRepo = AppDataSource.getMongoRepository(GameUser);
-                    gameUserRepo.findOneAndUpdate(
-                        { gameKey, userId },
-                        {
-                            $set: { lastLoginAt: new Date() },
-                            $setOnInsert: { gameKey, userId, attributes: {} }
-                        },
-                        { upsert: true, returnDocument: 'after' }
-                    ).then(result => {
-                        if (result && result.value) {
-                            clientInfo.attributes = result.value.attributes || {};
-                            ws.send(JSON.stringify({ type: "attributes_sync", attributes: clientInfo.attributes }));
-                        }
-                    });
-
-                    ws.on("message", async (message) => {
-                        try {
-                            const data = JSON.parse(message.toString());
-                            if (data.type === "set_attributes") {
-                                if (JSON.stringify(data.attributes).length > 1024) {
-                                    return ws.send(JSON.stringify({ error: "Attributes exceed 1KB" }));
-                                }
-                                clientInfo.attributes = data.attributes;
-
-                                // 持久化属性
-                                await gameUserRepo.updateOne(
-                                    { gameKey, userId },
-                                    { $set: { attributes: data.attributes } }
-                                );
-
-                                ws.send(JSON.stringify({ type: "attributes_updated", attributes: clientInfo.attributes }));
-                            } else if (data.type === "get_devices") {
-                                const otherDevices = Array.from(clients.entries())
-                                    .filter(([id, info]) => info.userId === userId && id !== clientId)
-                                    .map(([id, info]) => ({
-                                        clientId: id,
-                                        gameKey: info.gameKey,
-                                        attributes: info.attributes
-                                    }));
-                                ws.send(JSON.stringify({ type: "devices_info", devices: otherDevices }));
-                            }
-                        } catch (e) {
-                            console.error("WS Message Error:", e);
-                        }
-                    });
-
-                    ws.on("close", () => {
-                        clients.delete(clientId);
-                    });
-
-                } catch (err) {
-                    ws.close(1008, "Invalid Token");
-                }
-            });
-
+            // 注册 WebSocket 处理
+            import('./ws').then(({ registerWebSocketServer }) => registerWebSocketServer(wss));
 
             // 挂载主路由
             app.use("/api", router);

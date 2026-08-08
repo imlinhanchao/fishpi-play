@@ -18,6 +18,67 @@ export interface UserInfo {
     isAdmin: boolean;
 }
 
+/**
+ * 在线设备信息
+ * @interface OnlineDevice
+ * @property {string} clientId - 设备连接 ID
+ * @property {any} attributes - 设备属性
+ */
+export interface OnlineDevice {
+    clientId: string;
+    attributes: any;
+}
+
+/**
+ * 在线客户端信息（包含用户信息和设备属性）
+ * @interface OnlineClient
+ * @extends UserInfo
+ * @property {string} clientId - 设备连接 ID
+ * @property {any} attributes - 设备属性
+ */
+export interface OnlineClient extends UserInfo {
+    clientId: string;
+    attributes: any;
+}
+
+/**
+ * 在线用户信息（按 userId 去重，包含每台设备信息）
+ * @interface OnlineUser
+ * @extends OnlineClient
+ * @property {OnlineDevice[]} devices - 用户的所有在线设备列表
+ */
+export interface OnlineUser extends OnlineClient {
+    devices: OnlineDevice[];
+}
+
+/**
+ * 发送消息结果
+ * @interface SendResult
+ * @property {number} sent - 成功发送的连接数量
+ */
+export interface SendResult {
+    sent: number;
+}
+
+/**
+ * GameSDK 类提供了与游戏后端交互的功能，包括用户认证、存档管理、实时通信等。
+ * @class GameSDK
+ * @example
+ * const sdk = new GameSDK('my-game-key');
+ * await sdk.login();
+ * await sdk.initAuth();
+ * const userInfo = await sdk.getUserProfile();
+ * await sdk.saveArchive('my game save data');
+ * const archive = await sdk.getArchive();
+ * sdk.connectRealtime((data) => {
+ *     console.log('Received real-time message:', data);
+ * });
+ * sdk.setAttributes({ level: 5, score: 1000 });
+ * const attributes = sdk.getAttributes();
+ * const onlineUsers = await sdk.getOnlineUsers();
+ * const onlineClients = await sdk.getOnlineClients();
+ * const sendResult = await sdk.sendMessageToUsers(['user1', 'user2'], { type: 'custom', payload: 'Hello' });
+ */
 export class GameSDK {
     /** 游戏 Key，用于多游戏区分 */
     private gameKey: string;
@@ -29,6 +90,8 @@ export class GameSDK {
     private ws: ReconnectingWebSocket | null = null;
     /** 存放从服务端同步过来的用户属性 */
     private userAttributes: Record<string, any> = {};
+    /** 事件监听器集合，按事件类型存储回调函数数组 */
+    private eventListeners: { [event: string]: Array<(data: any) => void> } = {};
 
     /**
      * 创建 GameSDK 实例
@@ -177,10 +240,16 @@ export class GameSDK {
         this.ws = new ReconnectingWebSocket(wsUrl);
         
         this.ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (onMessage) onMessage(data);
-            if (data.type === 'attributes_sync') {
-                this.userAttributes = data.attributes;
+            const msg = JSON.parse(event.data);
+            if (onMessage) onMessage(msg);
+            if (msg.type === 'attributes_sync') {
+                this.userAttributes = msg.attributes;
+            }
+            if (msg.type === 'custom_message' && msg.data?.type) {
+                const listeners = this.eventListeners[msg.data.type];
+                if (listeners && listeners.length > 0) {
+                    listeners.forEach(callback => callback(msg.data.payload));
+                }
             }
         };
     }
@@ -208,5 +277,76 @@ export class GameSDK {
      */
     getOtherDevices() {
         this.ws?.send(JSON.stringify({ type: 'get_devices' }));
+    }
+
+    /**
+     * 获取在线用户（按 userId 去重，包含每台设备信息）
+     * @returns {Promise<OnlineUser[]>} 在线用户列表
+     */
+    async getOnlineUsers(): Promise<OnlineUser[]> {
+        return await http.get<OnlineUser[]>(`/api/ws/${this.gameKey}/users`);
+    }
+
+    /**
+     * 获取在线客户端列表（包含每台设备信息）
+     * @returns {Promise<OnlineClient[]>} 在线客户端列表
+     */
+    async getOnlineClients(): Promise<OnlineClient[]> {
+        return await http.get<OnlineClient[]>(`/api/ws/${this.gameKey}/clients`);
+    }
+
+    /**
+     * 获取指定用户的在线客户端列表
+     * @param {string} userId - 用户 ID
+     * @returns {Promise<any[]>} 在线客户端列表
+     */
+    async getOnlineClientsByUser(userId: string): Promise<OnlineClient[]> {
+        return await http.get<OnlineClient[]>(`/api/ws/${this.gameKey}/${userId}/clients`);
+    }
+
+    /**
+     * 向指定用户 ID 列表发送消息（将发送给该用户的所有设备）
+     * @param {string[]} userIds - 用户 ID 列表
+     * @param {any} payload - 消息负载
+     */
+    async sendToUsers(userIds: string[], event: string, payload: any): Promise<SendResult> {
+        return await http.post<SendResult>(`/api/ws/${this.gameKey}/send`, { userIds, payload: { type: event, payload } });
+    }
+
+
+    /**
+     * 向指定客户端 ID 列表发送消息
+     * @param {string[]} clientIds - 客户端 ID 列表
+     * @param {any} payload - 消息负载
+     */
+    async sendToClients(clientIds: string[], payload: any): Promise<SendResult> {
+        return await http.post<SendResult>(`/api/ws/${this.gameKey}/send`, { clientIds, payload });
+    }
+
+    /**
+     * 监听指定事件类型的消息回调，返回一个取消监听的函数
+     * @param {string} event - 事件类型
+     * @param {(data: any) => void} callback - 事件回调
+     * @returns {() => void} 取消监听的函数
+     */
+    on(event: string, callback: (data: any) => void) {
+        if (!this.eventListeners[event]) {
+            this.eventListeners[event] = [];
+        }
+        this.eventListeners[event].push(callback);
+        return () => {
+            this.eventListeners[event] = this.eventListeners[event].filter(cb => cb !== callback);
+        };
+    }
+
+    /**
+     * 取消监听指定事件类型的消息回调
+     * @param {string} event - 事件类型
+     * @param {(data: any) => void} callback - 事件回调
+     */
+    off(event: string, callback: (data: any) => void) {
+        if (this.eventListeners[event]) {
+            this.eventListeners[event] = this.eventListeners[event].filter(cb => cb !== callback);
+        }
     }
 }

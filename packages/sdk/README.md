@@ -113,6 +113,27 @@ const attrs = sdk.getAttributes();
 #### `getOtherDevices(): void`
 请求获取当前账号在其他设备上的登录信息（通过 WebSocket 返回数据）。
 
+#### `getOnlineUsers(): Promise<OnlineUser[]>`
+按 `userId` 去重返回在线用户列表，每个 `OnlineUser` 包含用户信息及其所有在线设备（`devices`）。
+
+#### `getOnlineClients(): Promise<OnlineClient[]>`
+返回所有在线客户端（每台设备视为一个客户端），包含所属用户信息与设备属性。
+
+#### `getOnlineClientsByUser(userId: string): Promise<OnlineClient[]>`
+获取指定用户的在线客户端列表，参数 `userId` 为用户 ID，返回该用户所有在线客户端信息数组。
+
+#### `sendToUsers(userIds: string[], event: string, payload: any): Promise<SendResult>`
+向指定用户 ID 列表发送带事件类型的消息，`userIds` 为目标用户 ID 列表，`event` 为消息事件类型，`payload` 为消息内容。返回 `SendResult`，包含成功发送的连接数量 `sent`。
+
+#### `sendToClients(clientIds: string[], payload: any): Promise<SendResult>`
+向指定客户端 ID 列表发送消息。`clientIds` 为目标客户端 ID 列表，`payload` 为要发送的消息内容，返回对象包含已发送的数量 `sent`。
+
+#### `on(event: string, callback: (data: any) => void): () => void`
+监听指定事件类型的实时消息，返回一个取消监听的函数。常用于订阅自定义事件消息。
+
+#### `off(event: string, callback: (data: any) => void): void`
+取消订阅指定事件类型的回调。
+
 ## 类型定义
 
 ### `UserInfo`
@@ -125,4 +146,38 @@ interface UserInfo {
     avatar: string;   // 头像 URL
     isAdmin: boolean; // 是否为管理员
 }
+
+### `OnlineDevice`
+
+```typescript
+interface OnlineDevice {
+    clientId: string; // 设备连接 ID
+    attributes: any;  // 设备属性
+}
+```
+
+### `OnlineClient`
+
+```typescript
+interface OnlineClient extends UserInfo {
+    clientId: string; // 设备连接 ID
+    attributes: any;  // 设备属性
+}
+```
+
+### `OnlineUser`
+
+```typescript
+interface OnlineUser extends OnlineClient {
+    devices: OnlineDevice[]; // 用户的所有在线设备
+}
+```
+
+### `SendResult`
+
+```typescript
+interface SendResult {
+    sent: number; // 成功发送的连接数量
+}
+```
 ```

@@ -5,6 +5,7 @@ import { Archive } from "../entities/Archive";
 import { Game } from "../entities/Game";
 import { User } from "../entities/User";
 import { clients } from "../index";
+import { getOnlineUsers, sendToUserIds, sendToClientIds } from "../ws";
 import { authenticate } from "../middleware/auth";
 
 const router = Router();

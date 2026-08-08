@@ -5,6 +5,7 @@ import userRouter from "./user";
 import storageRouter from "./storage";
 import managementRouter from "./management";
 import adminRouter from "./admin";
+import wsRouter from "./ws";
 
 const router = Router();
 
@@ -12,6 +13,7 @@ router.use("/games", gameRouter);
 router.use("/auth", authRouter);
 router.use("/user", userRouter);
 router.use("/storage", storageRouter);
+router.use("/ws", wsRouter);
 router.use("/management", managementRouter);
 router.use("/admin", adminRouter);
 
