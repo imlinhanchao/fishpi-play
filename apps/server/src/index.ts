@@ -172,11 +172,11 @@ if (IS_CONFIGURED) {
         .catch((error) => console.log(error)));
 } else {
     app.post("/api/setup", (req, res) => {
-        const { mongodb, jwtSecret } = req.body;
-        if (!mongodb || !jwtSecret) {
+        const { mongodb, jwtSecret, noticeGoldenKey, noticeUsers } = req.body;
+        if (!mongodb || !jwtSecret || !noticeGoldenKey || !noticeUsers) {
             return res.error("参数不完整");
         }
-        saveConfig({ mongodb, jwtSecret });
+        saveConfig({ mongodb, jwtSecret, noticeGoldenKey, noticeUsers });
         res.json({ message: "配置已保存，正在重启..." });
         setTimeout(() => process.exit(0), 1000);
     });
